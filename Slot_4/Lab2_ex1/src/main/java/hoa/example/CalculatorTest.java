@@ -1,0 +1,61 @@
+package hoa.example;
+
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
+
+
+public class CalculatorTest {
+    private final Calculator calculator = new Calculator();
+    @Test
+    @DisplayName("add(2,3) trả về 5")
+    void add_TwoPositiveNumbers_ReturnsSum() {
+        // Arrange
+        int a = 2;
+        int b = 3;
+        int expected = 5;
+        // Act
+        int actual = calculator.add(a, b);
+        // Assert
+        Assertions.assertEquals(expected, actual, "2 + 3 phải bằng 5");
+    }
+    @Test
+    @DisplayName("divide(6,3) trả về 2")
+    void divide_ValidDivision_ReturnsQuotient() {
+        // Arrange
+        int a = 6;
+        int b = 3;
+        // Act
+        int result = calculator.divide(a, b);
+        // Assert
+        Assertions.assertEquals(2, result);
+    }
+    @Test
+    @DisplayName("divide(10,0) ném IllegalArgumentException")
+    void divide_ByZero_ThrowsIllegalArgumentException() {
+        // Arrange
+        int a = 10;
+        int b = 0;
+        // Act & Assert
+        IllegalArgumentException ex = Assertions.assertThrows(
+                IllegalArgumentException.class,
+                () -> calculator.divide(a, b)
+        );
+        Assertions.assertEquals("Cannot divide by zero", ex.getMessage());
+    }
+    @ParameterizedTest(name = "Test {index} => {0} * {1} = {2}")
+    @CsvFileSource(resources = "/data.csv", numLinesToSkip = 1)
+    @DisplayName("multiply: kiểm thử với nhiều bộ dữ liệu từ CSV")
+    void multiply_VariousInputs_ReturnsProduct(int a, int b, int expected) {
+        // Arrange: a, b, expected do JUnit inject từ CSV
+        // Act
+        int actual = calculator.multiply(a, b);
+        // Assert
+        assertEquals(expected, actual,
+                () -> a + " * " + b + " phải bằng " + expected);
+    }
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<!--
+    Checkstyle cho Java Project Template — SWT301
+    Dựa trên Google Java Style Guide (đơn giản hóa cho sinh viên)
+    Mức: warning (không fail build, chỉ báo cáo)
+-->
+<module name="Checker">
+    <property name="severity" value="warning"/>
+    <property name="fileExtensions" value="java"/>
+
+    <!-- Không cho tab, dùng spaces -->
+    <module name="FileTabCharacter"/>
+
+    <!-- Dòng tối đa 120 ký tự -->
+    <module name="LineLength">
+        <property name="max" value="120"/>
+    </module>
+
+    <!-- Không cho khoảng trắng cuối dòng -->
+    <module name="RegexpSingleline">
+        <property name="format" value="\s+$"/>
+        <property name="message" value="Line has trailing whitespace."/>
+    </module>
+
+    <module name="TreeWalker">
+
+        <!-- ===== NAMING ===== -->
+        <module name="TypeName"/>
+        <module name="MethodName"/>
+        <module name="LocalVariableName"/>
+        <module name="ParameterName"/>
+        <module name="ConstantName"/>
+        <module name="MemberName"/>
+
+        <!-- ===== IMPORTS ===== -->
+        <module name="UnusedImports"/>
+        <module name="RedundantImport"/>
+
+        <!-- ===== CODE QUALITY ===== -->
+        <module name="EmptyBlock"/>
+        <module name="EmptyCatchBlock"/>
+        <module name="EmptyStatement"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+
+        <!-- Magic numbers (bỏ qua -1, 0, 1, 2) -->
+        <module name="MagicNumber">
+            <property name="ignoreNumbers" value="-1, 0, 1, 2"/>
+            <property name="ignoreAnnotation" value="true"/>
+            <property name="ignoreHashCodeMethod" value="true"/>
+        </module>
+
+        <!-- Phương thức tối đa 50 dòng -->
+        <module name="MethodLength">
+            <property name="max" value="50"/>
+        </module>
+
+        <!-- ===== WHITESPACE ===== -->
+        <module name="WhitespaceAfter"/>
+
+        <!-- ===== MISC ===== -->
+        <module name="UpperEll"/>
+        <module name="ArrayTypeStyle"/>
+
+    </module>
+</module>

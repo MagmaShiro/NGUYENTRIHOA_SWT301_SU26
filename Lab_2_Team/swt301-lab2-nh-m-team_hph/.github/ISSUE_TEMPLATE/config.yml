@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Hướng dẫn dự án
+    url: ../README.md
+    about: Đọc README trước khi tạo issue

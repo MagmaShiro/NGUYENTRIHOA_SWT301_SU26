@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ================================================================
+         SINH VIÊN: Đổi groupId và artifactId theo mã lớp và tên nhóm
+         Ví dụ: groupId = se1801.nhom05   artifactId = project-name
+         ================================================================ -->
+    <groupId>com.example</groupId>
+    <artifactId>java-project-template</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>Java Project Template — SWT301</name>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Thư mục nguồn (khớp với cấu trúc repo) -->
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>tests</testSourceDirectory>
+
+        <!-- Plugin versions — tested with Java 21 LTS -->
+        <junit.version>5.10.2</junit.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <checkstyle.plugin.version>3.3.1</checkstyle.plugin.version>
+        <checkstyle.version>10.14.1</checkstyle.version>
+        <surefire.version>3.2.5</surefire.version>
+
+        <!-- Ngưỡng coverage tối thiểu — giảng viên có thể điều chỉnh -->
+        <jacoco.minimum.coverage>0.60</jacoco.minimum.coverage>
+    </properties>
+
+    <dependencies>
+        <!-- ===== JUnit 5 ===== -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit 5 Params — @ParameterizedTest, @CsvSource, @ValueSource -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!-- Override thư mục src/ và tests/ thay vì mặc định Maven -->
+    <build>
+        <sourceDirectory>${sourceDirectory}</sourceDirectory>
+        <testSourceDirectory>${testSourceDirectory}</testSourceDirectory>
+
+        <plugins>
+
+            <!-- ===== Compiler ===== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- ===== Surefire — chạy JUnit 5 tests ===== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+                <configuration>
+                    <!-- Hiển thị tên test khi chạy CI -->
+                    <printSummary>true</printSummary>
+                    <reportFormat>plain</reportFormat>
+                </configuration>
+            </plugin>
+
+            <!-- ===== JaCoCo — Test Coverage ===== -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals><goal>prepare-agent</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals><goal>report</goal></goals>
+                    </execution>
+                    <!-- Fail nếu coverage < ngưỡng tối thiểu -->
+                    <execution>
+                        <id>check</id>
+                        <goals><goal>check</goal></goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>${jacoco.minimum.coverage}</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <!-- Đặt haltOnFailure=false để CI vẫn report đủ, không dừng giữa chừng -->
+                            <haltOnFailure>false</haltOnFailure>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ===== Checkstyle — Coding Style ===== -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>false</failsOnError>
+                    <failOnViolation>false</failOnViolation>
+                    <includeTestSourceDirectory>false</includeTestSourceDirectory>
+                    <outputFile>${project.build.directory}/checkstyle-result.xml</outputFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle-check</id>
+                        <phase>validate</phase>
+                        <goals><goal>check</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <!-- mvn site → HTML report tổng hợp -->
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${checkstyle.plugin.version}</version>
+                <configuration>
+                    <configLocation>checkstyle.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+</project>

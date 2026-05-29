@@ -1,0 +1,27 @@
+# Maven build output
+target/
+*.class
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Word temp lock files
+~$*
+
+# Windows shortcut files
+*.lnk
+
+# Claude Code / IDE upgrade session data
+.github/java-upgrade/
